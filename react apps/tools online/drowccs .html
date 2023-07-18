@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>DrowCCS | DrowKid</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../build/css/tailwind.css" />
+    <link rel="stylesheet" href="framework.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpine-collective/alpine-magic-helpers@0.5.x/dist/component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp" defer></script>
+  </head>
+  <body>
+    <div
+      x-data="setup()"
+      x-init="$refs.loading.classList.add('hidden'); setColors(color);"
+      :class="{ 'dark': isDark}"
+      @resize.window="watchScreen()"
+    >
+      <div class="flex h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+        <!-- Loading screen -->
+        <div
+          x-ref="loading"
+          class="fixed inset-0 z-50 flex items-center justify-center text-2xl font-semibold text-white bg-primary-darker"
+        >
+          Awanta...
+        </div>
+
+        <!-- Sidebar first column -->
+        <!-- Backdrop -->
+        <div
+          x-show="isSidebarOpen"
+          @click="isSidebarOpen = false"
+          class="fixed inset-0 z-10 bg-primary-darker md:hidden"
+          style="opacity: 0.5"
+          aria-hidden="true"
+        ></div>
+
+        <aside
+          x-show="isSidebarOpen"
+          x-transition:enter="transition-all transform duration-300 ease-in-out"
+          x-transition:enter-start="-translate-x-full opacity-0"
+          x-transition:enter-end="translate-x-0 opacity-100"
+          x-transition:leave="transition-all transform duration-300 ease-in-out"
+          x-transition:leave-start="translate-x-0 opacity-100"
+          x-transition:leave-end="-translate-x-full opacity-0"
+          x-ref="sidebar"
+          @keydown.escape="window.innerWidth <= 768 ? isSidebarOpen = false : ''"
+          tabindex="-1"
+          class="fixed inset-y-0 z-10 flex flex-shrink-0 bg-white border-r md:static dark:border-primary-darker dark:bg-darker focus:outline-none"
+        >
+          <!-- Mini column -->
+          <nav class="flex flex-col flex-shrink-0 h-full px-2 py-4 border-r dark:border-primary-darker">
+            <!-- Brand -->
+            <div class="flex-shrink-0">
+              <a
+                href="../index.html"
+                class="inline-block text-xl font-bold tracking-wider uppercase text-primary-dark dark:text-light"
+              >
+                DrowKid
+              </a>
+            </div>
+            <div class="flex flex-col items-center justify-center flex-1 space-y-4">
+              <!-- Home link -->
+              <!-- Active classes "bg-primary text-white" -->
+              <!-- inActive classes "bg-primary-50 text-primary-lighter" -->
+              <a
+                href="#"
+                class="p-2 text-white transition-colors duration-200 rounded-full bg-primary hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+              >
+                <span class="sr-only">DrowCCS</span>
+                <svg
+                  class="w-7 h-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  />
+                </svg>
+              </a>
+              <!-- Message link -->
+              <!-- Active classes "bg-primary text-white" -->
+              <!-- inActive classes "bg-primary-50 text-primary-lighter" -->
+              <a
+                href="#"
+                class="p-2 transition-colors duration-200 rounded-full text-primary-lighter bg-primary-50 hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+              >
+                <svg
+                  class="w-7 h-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                  />
+                </svg>
+              </a>
+              <!-- Another link -->
+              <!-- Active classes "bg-primary text-white" -->
+              <!-- inActive classes "bg-primary-50 text-primary-lighter" -->
+              <a
+                href="#"
+                class="p-2 transition-colors duration-200 rounded-full text-primary-lighter bg-primary-50 hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+              >
+                <span class="sr-only">Another Link</span>
+                <svg
+                  class="w-7 h-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                  />
+                </svg>
+              </a>
+              <!-- Users link -->
+              <!-- Active classes "bg-primary text-white" -->
+              <!-- inActive classes "bg-primary-50 text-primary-lighter" -->
+              <a
+                href="#"
+                class="p-2 transition-colors duration-200 rounded-full text-primary-lighter bg-primary-50 hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+              >
+                <span class="sr-only">Users</span>
+                <svg
+                  class="w-7 h-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <!-- Sidebar footer -->
+            <!-- prevent default just to prevent form submission in this demo -->
+            <form @submit="$event.preventDefault()" action="#" class="flex items-center justify-center flex-shrink-0">
+              <!-- Logout button -->
+              <button
+                class="p-2 transition-colors duration-200 rounded-full text-primary-lighter bg-primary-50 hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+              >
+                <span class="sr-only">Logout</span>
+                <svg
+                  class="w-7 h-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </button>
+            </form>
+          </nav>
+        </aside>
+
+        <div class="flex flex-1 h-screen overflow-y-scroll">
+          <!-- Main content -->
+          <main class="flex-1">
+            <header class="flex items-center justify-between p-4">
+              <div class="flex items-center space-x-4 md:space-x-0">
+                <!-- Sidebar button -->
+                <button
+                  @click="isSidebarOpen = true; $nextTick(() => { $refs.sidebar.focus() })"
+                  class="p-1 transition-colors duration-200 rounded-md text-primary-lighter bg-primary-50 md:hidden hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:ring"
+                >
+                  <span class="sr-only">Open main manu</span>
+                  <span aria-hidden="true">
+                    <svg
+                      x-show="!isSidebarOpen"
+                      class="w-8 h-8"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                    <svg
+                      x-show="isSidebarOpen"
+                      class="w-8 h-8"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </span>
+                </button>
+                <h1 class="text-2xl font-medium">DrowCCS</h1>
+              </div>
+              <div class="space-x-2">
+                <!-- Toggle dark theme button -->
+                <button aria-hidden="true" class="relative focus:outline-none" x-cloak @click="toggleTheme">
+                  <div
+                    class="w-12 h-6 transition rounded-full outline-none bg-primary-100 dark:bg-primary-lighter"
+                  ></div>
+                  <div
+                    class="absolute top-0 left-0 inline-flex items-center justify-center w-6 h-6 transition-all duration-150 transform scale-110 rounded-full shadow-sm"
+                    :class="{ 'translate-x-0 -translate-y-px  bg-white text-primary-dark': !isDark, 'translate-x-6 text-primary-100 bg-primary-darker': isDark }"
+                  >
+                    <svg
+                      x-show="!isDark"
+                      class="w-4 h-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                      />
+                    </svg>
+                    <svg
+                      x-show="isDark"
+                      class="w-4 h-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+                <!-- Search panel button -->
+            
+                <!-- User panel button -->
+                <button
+                  @click="openUserPanel"
+                  class="p-1 transition-colors duration-200 rounded-md text-primary-lighter bg-primary-50 xl:hidden hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:ring"
+                >
+                  <span class="sr-only">Open user panel</span>
+                  <span aria-hidden="true">
+                    <svg
+                      class="w-8 h-8"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </header>
+            <section class="flex flex-col items-center justify-center p-4 space-y-4"></section>
+            <!-- CONTENIDO -->
+            
+         <h1 class="title-font text-lg font-mono text-gray-900 mb-3 text-center"><em><strong>Generador de tarjetas de crédito v2.0</strong></em></h1> 
+         <!-- contenido -->  
+     	<script type="text/javascript">try{if("undefined"!=typeof localStorage){var tieSkin=localStorage.getItem("tie-skin"),html=document.getElementsByTagName("html")[0].classList,htmlSkin="light";if(html.contains("dark-skin")&&(htmlSkin="dark"),null!=tieSkin&&tieSkin!=htmlSkin){html.add("tie-skin-inverted");var tieSkinInverted=!0}"dark"==tieSkin?html.add("dark-skin"):"light"==tieSkin&&html.remove("dark-skin")}}catch(t){console.log(t)}</script>
+		
+	
+	<title>DrowCCS</title>
+	<meta name="description" content="Este generador de números de tarjetas de crédito aleatorias ha sido diseñado exclusivamente para realizar pruebas de seguridad" />
+
+	<meta property="og:locale" content="es_ES" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Generador De Tarjetas De Crédito Aleatorias - DrowCCS" />
+	<meta property="og:description" content="Este generador de números de tarjetas de crédito aleatorias ha sido diseñado exclusivamente para realizar pruebas de seguridad" />
+	<meta property="og:url" content="https://drowkid.bswc.net/drowccs/" />
+	<meta property="og:site_name" content="DrowCC'S" />
+	<meta property="article:modified_time" content="2023-06-22T19:05:44+00:00" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://cc-genpro.com/","url":"https://cc-genpro.com/","name":"Generador De Tarjetas De Crédito Aleatorias V3.0 - CC-GEN PRO","isPartOf":{"@id":"https://cc-genpro.com/#website"},"about":{"@id":"https://cc-genpro.com/#/schema/person/3ce295b6a786257e4535b04b3420c643"},"datePublished":"2023-01-18T18:30:24+00:00","dateModified":"2023-06-22T19:05:44+00:00","description":"Este generador de números de tarjetas de crédito aleatorias ha sido diseñado exclusivamente para realizar pruebas de seguridad","breadcrumb":{"@id":"https://cc-genpro.com/#breadcrumb"},"inLanguage":"es","potentialAction":[{"@type":"ReadAction","target":["https://cc-genpro.com/"]}]},{"@type":"BreadcrumbList","@id":"https://cc-genpro.com/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Portada"}]},{"@type":"WebSite","@id":"https://cc-genpro.com/#website","url":"https://cc-genpro.com/","name":"CC-GEN PRO","description":"Generador de tarjetas de credito aleatorio","publisher":{"@id":"https://cc-genpro.com/#/schema/person/3ce295b6a786257e4535b04b3420c643"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://cc-genpro.com/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"es"},{"@type":["Person","Organization"],"@id":"https://cc-genpro.com/#/schema/person/3ce295b6a786257e4535b04b3420c643","name":"cc genpro","image":{"@type":"ImageObject","inLanguage":"es","@id":"https://cc-genpro.com/#/schema/person/image/","url":"https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro.png","contentUrl":"https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro.png","width":512,"height":512,"caption":"cc genpro"},"logo":{"@id":"https://cc-genpro.com/#/schema/person/image/"},"sameAs":["https://cc-genpro.com"]}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="CC-GEN PRO &raquo; Feed" href="https://cc-genpro.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="CC-GEN PRO &raquo; Feed de los comentarios" href="https://cc-genpro.com/comments/feed/" />
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/cc-genpro.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.2.2"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){p.clearRect(0,0,i.width,i.height),p.fillText(e,0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(t,0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s("\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!s("\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!s("\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!s("\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='https://cc-genpro.com/wp-includes/css/dist/block-library/style.min.css?ver=6.2.2' type='text/css' media='all' />
+<style id='wp-block-library-theme-inline-css' type='text/css'>
+.wp-block-audio figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-audio figcaption{color:hsla(0,0%,100%,.65)}.wp-block-audio{margin:0 0 1em}.wp-block-code{border:1px solid #ccc;border-radius:4px;font-family:Menlo,Consolas,monaco,monospace;padding:.8em 1em}.wp-block-embed figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-embed figcaption{color:hsla(0,0%,100%,.65)}.wp-block-embed{margin:0 0 1em}.blocks-gallery-caption{color:#555;font-size:13px;text-align:center}.is-dark-theme .blocks-gallery-caption{color:hsla(0,0%,100%,.65)}.wp-block-image figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-image figcaption{color:hsla(0,0%,100%,.65)}.wp-block-image{margin:0 0 1em}.wp-block-pullquote{border-bottom:4px solid;border-top:4px solid;color:currentColor;margin-bottom:1.75em}.wp-block-pullquote cite,.wp-block-pullquote footer,.wp-block-pullquote__citation{color:currentColor;font-size:.8125em;font-style:normal;text-transform:uppercase}.wp-block-quote{border-left:.25em solid;margin:0 0 1.75em;padding-left:1em}.wp-block-quote cite,.wp-block-quote footer{color:currentColor;font-size:.8125em;font-style:normal;position:relative}.wp-block-quote.has-text-align-right{border-left:none;border-right:.25em solid;padding-left:0;padding-right:1em}.wp-block-quote.has-text-align-center{border:none;padding-left:0}.wp-block-quote.is-large,.wp-block-quote.is-style-large,.wp-block-quote.is-style-plain{border:none}.wp-block-search .wp-block-search__label{font-weight:700}.wp-block-search__button{border:1px solid #ccc;padding:.375em .625em}:where(.wp-block-group.has-background){padding:1.25em 2.375em}.wp-block-separator.has-css-opacity{opacity:.4}.wp-block-separator{border:none;border-bottom:2px solid;margin-left:auto;margin-right:auto}.wp-block-separator.has-alpha-channel-opacity{opacity:1}.wp-block-separator:not(.is-style-wide):not(.is-style-dots){width:100px}.wp-block-separator.has-background:not(.is-style-dots){border-bottom:none;height:1px}.wp-block-separator.has-background:not(.is-style-wide):not(.is-style-dots){height:2px}.wp-block-table{margin:0 0 1em}.wp-block-table td,.wp-block-table th{word-break:normal}.wp-block-table figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-table figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-video figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video{margin:0 0 1em}.wp-block-template-part.has-background{margin-bottom:0;margin-top:0;padding:1.25em 2.375em}
+</style>
+<link rel='stylesheet' id='classic-theme-styles-css' href='https://cc-genpro.com/wp-includes/css/classic-themes.min.css?ver=6.2.2' type='text/css' media='all' />
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='tie-css-base-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/base.min.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-styles-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/style.min.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-widgets-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/widgets.min.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-helpers-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/helpers.min.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-fontawesome5-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/fontawesome.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-ilightbox-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/ilightbox/dark-skin/skin.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-single-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/single.min.css?ver=5.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='tie-css-print-css' href='https://cc-genpro.com/wp-content/themes/jannah/assets/css/print.css?ver=5.4.3' type='text/css' media='print' />
+<link rel='stylesheet' id='enlighterjs-css' href='https://cc-genpro.com/wp-content/plugins/enlighter/cache/enlighterjs.min.css?ver=RhSvk3Ooaaf5+E2' type='text/css' media='all' />
+<style id='enlighterjs-inline-css' type='text/css'>
+.wf-active .logo-text,.wf-active h1,.wf-active h2,.wf-active h3,.wf-active h4,.wf-active h5,.wf-active h6,.wf-active .the-subtitle{font-family: 'Poppins';}#main-nav .menu li.menu-item-has-children > a:before,#main-nav .main-menu .mega-menu > a:before{border-top-color: #008b8b;}#main-nav .menu li .menu-item-has-children > a:before,#main-nav .mega-menu .menu-item-has-children > a:before{border-top-color: transparent;border-left-color: #008b8b;}.rtl #main-nav .menu li .menu-item-has-children > a:before,.rtl #main-nav .mega-menu .menu-item-has-children > a:before{border-left-color: transparent;border-right-color: #008b8b;}#main-nav a:not(:hover),#main-nav a.social-link:not(:hover) span,#main-nav .dropdown-social-icons li a span,.search-in-main-nav.autocomplete-suggestions a{color: #008b8b;}#footer .site-info a:not(:hover){color: #2ecc71;}
+</style>
+<script type='text/javascript' id='cookie-law-info-js-extra'>
+/* <![CDATA[ */
+var _ckyConfig = {"_ipData":[],"_assetsURL":"https:\/\/cc-genpro.com\/wp-content\/plugins\/cookie-law-info\/lite\/frontend\/images\/","_publicURL":"https:\/\/cc-genpro.com","_expiry":"365","_categories":[{"name":"Necesaria","slug":"necessary","isNecessary":true,"ccpaDoNotSell":true,"cookies":[],"active":true,"defaultConsent":{"gdpr":true,"ccpa":true}},{"name":"Funcional","slug":"functional","isNecessary":false,"ccpaDoNotSell":true,"cookies":[],"active":true,"defaultConsent":{"gdpr":false,"ccpa":false}},{"name":"Anal\u00edtica","slug":"analytics","isNecessary":false,"ccpaDoNotSell":true,"cookies":[],"active":true,"defaultConsent":{"gdpr":false,"ccpa":false}},{"name":"El rendimiento","slug":"performance","isNecessary":false,"ccpaDoNotSell":true,"cookies":[],"active":true,"defaultConsent":{"gdpr":false,"ccpa":false}},{"name":"Anuncio","slug":"advertisement","isNecessary":false,"ccpaDoNotSell":true,"cookies":[],"active":true,"defaultConsent":{"gdpr":false,"ccpa":false}}],"_activeLaw":"gdpr","_rootDomain":"","_block":"1","_showBanner":"1","_bannerConfig":{"settings":{"type":"box","position":"bottom-left","applicableLaw":"gdpr"},"behaviours":{"reloadBannerOnAccept":false,"loadAnalyticsByDefault":false,"animations":{"onLoad":"animate","onHide":"sticky"}},"config":{"revisitConsent":{"status":false,"tag":"revisit-consent","position":"bottom-left","meta":{"url":"#"},"styles":{"background-color":"#0056a7"},"elements":{"title":{"type":"text","tag":"revisit-consent-title","status":true,"styles":{"color":"#0056a7"}}}},"preferenceCenter":{"toggle":{"status":true,"tag":"detail-category-toggle","type":"toggle","states":{"active":{"styles":{"background-color":"#1863DC"}},"inactive":{"styles":{"background-color":"#D0D5D2"}}}}},"categoryPreview":{"status":false,"toggle":{"status":true,"tag":"detail-category-preview-toggle","type":"toggle","states":{"active":{"styles":{"background-color":"#1863DC"}},"inactive":{"styles":{"background-color":"#D0D5D2"}}}}},"videoPlaceholder":{"status":true,"styles":{"background-color":"#000000","border-color":"#000000","color":"#ffffff"}},"readMore":{"status":true,"tag":"readmore-button","type":"link","meta":{"noFollow":true,"newTab":true},"styles":{"color":"#1863dc","background-color":"transparent","border-color":"transparent"}},"auditTable":{"status":true},"optOption":{"status":true,"toggle":{"status":true,"tag":"optout-option-toggle","type":"toggle","states":{"active":{"styles":{"background-color":"#1863dc"}},"inactive":{"styles":{"background-color":"#FFFFFF"}}}}}}},"_version":"3.1.0","_logConsent":"1","_tags":[{"tag":"accept-button","styles":{"color":"#FFFFFF","background-color":"#1863dc","border-color":"#1863dc"}},{"tag":"reject-button","styles":{"color":"#1863dc","background-color":"transparent","border-color":"#1863dc"}},{"tag":"settings-button","styles":{"color":"#1863dc","background-color":"transparent","border-color":"#1863dc"}},{"tag":"readmore-button","styles":{"color":"#1863dc","background-color":"transparent","border-color":"transparent"}},{"tag":"donotsell-button","styles":{"color":"#1863dc","background-color":"transparent","border-color":"transparent"}},{"tag":"accept-button","styles":{"color":"#FFFFFF","background-color":"#1863dc","border-color":"#1863dc"}},{"tag":"revisit-consent","styles":{"background-color":"#0056a7"}}],"_shortCodes":[{"key":"cky_readmore","content":"<a href=\"https:\/\/cc-genpro.com\/politica-de-cookies\/\" class=\"cky-policy\" aria-label=\"Pol\u00edtica de cookies\" target=\"_blank\" rel=\"noopener\" data-cky-tag=\"readmore-button\">Pol\u00edtica de cookies<\/a>","tag":"readmore-button","status":true,"attributes":{"rel":"nofollow","target":"_blank"}},{"key":"cky_show_desc","content":"<button class=\"cky-show-desc-btn\" data-cky-tag=\"show-desc-button\" aria-label=\"Mostrar m\u00e1s\">Mostrar m\u00e1s<\/button>","tag":"show-desc-button","status":true,"attributes":[]},{"key":"cky_hide_desc","content":"<button class=\"cky-show-desc-btn\" data-cky-tag=\"hide-desc-button\" aria-label=\"Mostrar menos\">Mostrar menos<\/button>","tag":"hide-desc-button","status":true,"attributes":[]},{"key":"cky_category_toggle_label","content":"[cky_{{status}}_category_label] [cky_preference_{{category_slug}}_title]","tag":"","status":true,"attributes":[]},{"key":"cky_enable_category_label","content":"Permitir","tag":"","status":true,"attributes":[]},{"key":"cky_disable_category_label","content":"Desactivar","tag":"","status":true,"attributes":[]},{"key":"cky_video_placeholder","content":"<div class=\"video-placeholder-normal\" data-cky-tag=\"video-placeholder\" id=\"[UNIQUEID]\"><p class=\"video-placeholder-text-normal\" data-cky-tag=\"placeholder-title\">Por favor acepte el consentimiento de cookies<\/p><\/div>","tag":"","status":true,"attributes":[]},{"key":"cky_enable_optout_label","content":"Permitir","tag":"","status":true,"attributes":[]},{"key":"cky_disable_optout_label","content":"Desactivar","tag":"","status":true,"attributes":[]},{"key":"cky_optout_toggle_label","content":"[cky_{{status}}_optout_label] [cky_optout_option_title]","tag":"","status":true,"attributes":[]},{"key":"cky_optout_option_title","content":"No vendan ni compartan mi informaci\u00f3n personal","tag":"","status":true,"attributes":[]},{"key":"cky_optout_close_label","content":"Cerca","tag":"","status":true,"attributes":[]}],"_rtl":"","_providersToBlock":[]};
+var _ckyStyles = {"css":".cky-overlay{background: #000000; opacity: 0.4; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999999;}.cky-hide{display: none;}.cky-btn-revisit-wrapper{display: flex; align-items: center; justify-content: center; background: #0056a7; width: 45px; height: 45px; border-radius: 50%; position: fixed; z-index: 999999; cursor: pointer;}.cky-revisit-bottom-left{bottom: 15px; left: 15px;}.cky-revisit-bottom-right{bottom: 15px; right: 15px;}.cky-btn-revisit-wrapper .cky-btn-revisit{display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; position: relative; margin: 0; padding: 0;}.cky-btn-revisit-wrapper .cky-btn-revisit img{max-width: fit-content; margin: 0; height: 30px; width: 30px;}.cky-revisit-bottom-left:hover::before{content: attr(data-tooltip); position: absolute; background: #4e4b66; color: #ffffff; left: calc(100% + 7px); font-size: 12px; line-height: 16px; width: max-content; padding: 4px 8px; border-radius: 4px;}.cky-revisit-bottom-left:hover::after{position: absolute; content: \"\"; border: 5px solid transparent; left: calc(100% + 2px); border-left-width: 0; border-right-color: #4e4b66;}.cky-revisit-bottom-right:hover::before{content: attr(data-tooltip); position: absolute; background: #4e4b66; color: #ffffff; right: calc(100% + 7px); font-size: 12px; line-height: 16px; width: max-content; padding: 4px 8px; border-radius: 4px;}.cky-revisit-bottom-right:hover::after{position: absolute; content: \"\"; border: 5px solid transparent; right: calc(100% + 2px); border-right-width: 0; border-left-color: #4e4b66;}.cky-revisit-hide{display: none;}.cky-consent-container{position: fixed; width: 440px; box-sizing: border-box; z-index: 9999999; border-radius: 6px;}.cky-consent-container .cky-consent-bar{background: #ffffff; border: 1px solid; padding: 20px 26px; box-shadow: 0 -1px 10px 0 #acabab4d; border-radius: 6px;}.cky-box-bottom-left{bottom: 40px; left: 40px;}.cky-box-bottom-right{bottom: 40px; right: 40px;}.cky-box-top-left{top: 40px; left: 40px;}.cky-box-top-right{top: 40px; right: 40px;}.cky-custom-brand-logo-wrapper .cky-custom-brand-logo{width: 100px; height: auto; margin: 0 0 12px 0;}.cky-notice .cky-title{color: #212121; font-weight: 700; font-size: 18px; line-height: 24px; margin: 0 0 12px 0;}.cky-notice-des *,.cky-preference-content-wrapper *,.cky-accordion-header-des *,.cky-gpc-wrapper .cky-gpc-desc *{font-size: 14px;}.cky-notice-des{color: #212121; font-size: 14px; line-height: 24px; font-weight: 400;}.cky-notice-des img{height: 25px; width: 25px;}.cky-consent-bar .cky-notice-des p,.cky-gpc-wrapper .cky-gpc-desc p,.cky-preference-body-wrapper .cky-preference-content-wrapper p,.cky-accordion-header-wrapper .cky-accordion-header-des p,.cky-cookie-des-table li div:last-child p{color: inherit; margin-top: 0;}.cky-notice-des P:last-child,.cky-preference-content-wrapper p:last-child,.cky-cookie-des-table li div:last-child p:last-child,.cky-gpc-wrapper .cky-gpc-desc p:last-child{margin-bottom: 0;}.cky-notice-des a.cky-policy,.cky-notice-des button.cky-policy{font-size: 14px; color: #1863dc; white-space: nowrap; cursor: pointer; background: transparent; border: 1px solid; text-decoration: underline;}.cky-notice-des button.cky-policy{padding: 0;}.cky-notice-des a.cky-policy:focus-visible,.cky-notice-des button.cky-policy:focus-visible,.cky-preference-content-wrapper .cky-show-desc-btn:focus-visible,.cky-accordion-header .cky-accordion-btn:focus-visible,.cky-preference-header .cky-btn-close:focus-visible,.cky-switch input[type=\"checkbox\"]:focus-visible,.cky-footer-wrapper a:focus-visible,.cky-btn:focus-visible{outline: 2px solid #1863dc; outline-offset: 2px;}.cky-btn:focus:not(:focus-visible),.cky-accordion-header .cky-accordion-btn:focus:not(:focus-visible),.cky-preference-content-wrapper .cky-show-desc-btn:focus:not(:focus-visible),.cky-btn-revisit-wrapper .cky-btn-revisit:focus:not(:focus-visible),.cky-preference-header .cky-btn-close:focus:not(:focus-visible),.cky-consent-bar .cky-banner-btn-close:focus:not(:focus-visible){outline: 0;}button.cky-show-desc-btn:not(:hover):not(:active){color: #1863dc; background: transparent;}button.cky-accordion-btn:not(:hover):not(:active),button.cky-banner-btn-close:not(:hover):not(:active),button.cky-btn-revisit:not(:hover):not(:active),button.cky-btn-close:not(:hover):not(:active){background: transparent;}.cky-consent-bar button:hover,.cky-modal.cky-modal-open button:hover,.cky-consent-bar button:focus,.cky-modal.cky-modal-open button:focus{text-decoration: none;}.cky-notice-btn-wrapper{display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; margin-top: 16px;}.cky-notice-btn-wrapper .cky-btn{text-shadow: none; box-shadow: none;}.cky-btn{flex: auto; max-width: 100%; font-size: 14px; font-family: inherit; line-height: 24px; padding: 8px; font-weight: 500; margin: 0 8px 0 0; border-radius: 2px; cursor: pointer; text-align: center; text-transform: none; min-height: 0;}.cky-btn:hover{opacity: 0.8;}.cky-btn-customize{color: #1863dc; background: transparent; border: 2px solid #1863dc;}.cky-btn-reject{color: #1863dc; background: transparent; border: 2px solid #1863dc;}.cky-btn-accept{background: #1863dc; color: #ffffff; border: 2px solid #1863dc;}.cky-btn:last-child{margin-right: 0;}@media (max-width: 576px){.cky-box-bottom-left{bottom: 0; left: 0;}.cky-box-bottom-right{bottom: 0; right: 0;}.cky-box-top-left{top: 0; left: 0;}.cky-box-top-right{top: 0; right: 0;}}@media (max-width: 440px){.cky-box-bottom-left, .cky-box-bottom-right, .cky-box-top-left, .cky-box-top-right{width: 100%; max-width: 100%;}.cky-consent-container .cky-consent-bar{padding: 20px 0;}.cky-custom-brand-logo-wrapper, .cky-notice .cky-title, .cky-notice-des, .cky-notice-btn-wrapper{padding: 0 24px;}.cky-notice-des{max-height: 40vh; overflow-y: scroll;}.cky-notice-btn-wrapper{flex-direction: column; margin-top: 0;}.cky-btn{width: 100%; margin: 10px 0 0 0;}.cky-notice-btn-wrapper .cky-btn-customize{order: 2;}.cky-notice-btn-wrapper .cky-btn-reject{order: 3;}.cky-notice-btn-wrapper .cky-btn-accept{order: 1; margin-top: 16px;}}@media (max-width: 352px){.cky-notice .cky-title{font-size: 16px;}.cky-notice-des *{font-size: 12px;}.cky-notice-des, .cky-btn{font-size: 12px;}}.cky-modal.cky-modal-open{display: flex; visibility: visible; -webkit-transform: translate(-50%, -50%); -moz-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); transform: translate(-50%, -50%); top: 50%; left: 50%; transition: all 1s ease;}.cky-modal{box-shadow: 0 32px 68px rgba(0, 0, 0, 0.3); margin: 0 auto; position: fixed; max-width: 100%; background: #ffffff; top: 50%; box-sizing: border-box; border-radius: 6px; z-index: 999999999; color: #212121; -webkit-transform: translate(-50%, 100%); -moz-transform: translate(-50%, 100%); -ms-transform: translate(-50%, 100%); -o-transform: translate(-50%, 100%); transform: translate(-50%, 100%); visibility: hidden; transition: all 0s ease;}.cky-preference-center{max-height: 79vh; overflow: hidden; width: 845px; overflow: hidden; flex: 1 1 0; display: flex; flex-direction: column; border-radius: 6px;}.cky-preference-header{display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid;}.cky-preference-header .cky-preference-title{font-size: 18px; font-weight: 700; line-height: 24px;}.cky-preference-header .cky-btn-close{margin: 0; cursor: pointer; vertical-align: middle; padding: 0; background: none; border: none; width: auto; height: auto; min-height: 0; line-height: 0; text-shadow: none; box-shadow: none;}.cky-preference-header .cky-btn-close img{margin: 0; height: 10px; width: 10px;}.cky-preference-body-wrapper{padding: 0 24px; flex: 1; overflow: auto; box-sizing: border-box;}.cky-preference-content-wrapper,.cky-gpc-wrapper .cky-gpc-desc{font-size: 14px; line-height: 24px; font-weight: 400; padding: 12px 0;}.cky-preference-content-wrapper{border-bottom: 1px solid;}.cky-preference-content-wrapper img{height: 25px; width: 25px;}.cky-preference-content-wrapper .cky-show-desc-btn{font-size: 14px; font-family: inherit; color: #1863dc; text-decoration: none; line-height: 24px; padding: 0; margin: 0; white-space: nowrap; cursor: pointer; background: transparent; border-color: transparent; text-transform: none; min-height: 0; text-shadow: none; box-shadow: none;}.cky-accordion-wrapper{margin-bottom: 10px;}.cky-accordion{border-bottom: 1px solid;}.cky-accordion:last-child{border-bottom: none;}.cky-accordion .cky-accordion-item{display: flex; margin-top: 10px;}.cky-accordion .cky-accordion-body{display: none;}.cky-accordion.cky-accordion-active .cky-accordion-body{display: block; padding: 0 22px; margin-bottom: 16px;}.cky-accordion-header-wrapper{cursor: pointer; width: 100%;}.cky-accordion-item .cky-accordion-header{display: flex; justify-content: space-between; align-items: center;}.cky-accordion-header .cky-accordion-btn{font-size: 16px; font-family: inherit; color: #212121; line-height: 24px; background: none; border: none; font-weight: 700; padding: 0; margin: 0; cursor: pointer; text-transform: none; min-height: 0; text-shadow: none; box-shadow: none;}.cky-accordion-header .cky-always-active{color: #008000; font-weight: 600; line-height: 24px; font-size: 14px;}.cky-accordion-header-des{font-size: 14px; line-height: 24px; margin: 10px 0 16px 0;}.cky-accordion-chevron{margin-right: 22px; position: relative; cursor: pointer;}.cky-accordion-chevron-hide{display: none;}.cky-accordion .cky-accordion-chevron i::before{content: \"\"; position: absolute; border-right: 1.4px solid; border-bottom: 1.4px solid; border-color: inherit; height: 6px; width: 6px; -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); transition: all 0.2s ease-in-out; top: 8px;}.cky-accordion.cky-accordion-active .cky-accordion-chevron i::before{-webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg);}.cky-audit-table{background: #f4f4f4; border-radius: 6px;}.cky-audit-table .cky-empty-cookies-text{color: inherit; font-size: 12px; line-height: 24px; margin: 0; padding: 10px;}.cky-audit-table .cky-cookie-des-table{font-size: 12px; line-height: 24px; font-weight: normal; padding: 15px 10px; border-bottom: 1px solid; border-bottom-color: inherit; margin: 0;}.cky-audit-table .cky-cookie-des-table:last-child{border-bottom: none;}.cky-audit-table .cky-cookie-des-table li{list-style-type: none; display: flex; padding: 3px 0;}.cky-audit-table .cky-cookie-des-table li:first-child{padding-top: 0;}.cky-cookie-des-table li div:first-child{width: 100px; font-weight: 600; word-break: break-word; word-wrap: break-word;}.cky-cookie-des-table li div:last-child{flex: 1; word-break: break-word; word-wrap: break-word; margin-left: 8px;}.cky-footer-shadow{display: block; width: 100%; height: 40px; background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%); position: absolute; bottom: calc(100% - 1px);}.cky-footer-wrapper{position: relative;}.cky-prefrence-btn-wrapper{display: flex; flex-wrap: wrap; align-items: center; justify-content: center; padding: 22px 24px; border-top: 1px solid;}.cky-prefrence-btn-wrapper .cky-btn{flex: auto; max-width: 100%; text-shadow: none; box-shadow: none;}.cky-btn-preferences{color: #1863dc; background: transparent; border: 2px solid #1863dc;}.cky-preference-header,.cky-preference-body-wrapper,.cky-preference-content-wrapper,.cky-accordion-wrapper,.cky-accordion,.cky-accordion-wrapper,.cky-footer-wrapper,.cky-prefrence-btn-wrapper{border-color: inherit;}@media (max-width: 845px){.cky-modal{max-width: calc(100% - 16px);}}@media (max-width: 576px){.cky-modal{max-width: 100%;}.cky-preference-center{max-height: 100vh;}.cky-prefrence-btn-wrapper{flex-direction: column;}.cky-accordion.cky-accordion-active .cky-accordion-body{padding-right: 0;}.cky-prefrence-btn-wrapper .cky-btn{width: 100%; margin: 10px 0 0 0;}.cky-prefrence-btn-wrapper .cky-btn-reject{order: 3;}.cky-prefrence-btn-wrapper .cky-btn-accept{order: 1; margin-top: 0;}.cky-prefrence-btn-wrapper .cky-btn-preferences{order: 2;}}@media (max-width: 425px){.cky-accordion-chevron{margin-right: 15px;}.cky-notice-btn-wrapper{margin-top: 0;}.cky-accordion.cky-accordion-active .cky-accordion-body{padding: 0 15px;}}@media (max-width: 352px){.cky-preference-header .cky-preference-title{font-size: 16px;}.cky-preference-header{padding: 16px 24px;}.cky-preference-content-wrapper *, .cky-accordion-header-des *{font-size: 12px;}.cky-preference-content-wrapper, .cky-preference-content-wrapper .cky-show-more, .cky-accordion-header .cky-always-active, .cky-accordion-header-des, .cky-preference-content-wrapper .cky-show-desc-btn, .cky-notice-des a.cky-policy{font-size: 12px;}.cky-accordion-header .cky-accordion-btn{font-size: 14px;}}.cky-switch{display: flex;}.cky-switch input[type=\"checkbox\"]{position: relative; width: 44px; height: 24px; margin: 0; background: #d0d5d2; -webkit-appearance: none; border-radius: 50px; cursor: pointer; outline: 0; border: none; top: 0;}.cky-switch input[type=\"checkbox\"]:checked{background: #1863dc;}.cky-switch input[type=\"checkbox\"]:before{position: absolute; content: \"\"; height: 20px; width: 20px; left: 2px; bottom: 2px; border-radius: 50%; background-color: white; -webkit-transition: 0.4s; transition: 0.4s; margin: 0;}.cky-switch input[type=\"checkbox\"]:after{display: none;}.cky-switch input[type=\"checkbox\"]:checked:before{-webkit-transform: translateX(20px); -ms-transform: translateX(20px); transform: translateX(20px);}@media (max-width: 425px){.cky-switch input[type=\"checkbox\"]{width: 38px; height: 21px;}.cky-switch input[type=\"checkbox\"]:before{height: 17px; width: 17px;}.cky-switch input[type=\"checkbox\"]:checked:before{-webkit-transform: translateX(17px); -ms-transform: translateX(17px); transform: translateX(17px);}}.cky-consent-bar .cky-banner-btn-close{position: absolute; right: 9px; top: 5px; background: none; border: none; cursor: pointer; padding: 0; margin: 0; min-height: 0; line-height: 0; height: auto; width: auto; text-shadow: none; box-shadow: none;}.cky-consent-bar .cky-banner-btn-close img{height: 9px; width: 9px; margin: 0;}.cky-notice-group{font-size: 14px; line-height: 24px; font-weight: 400; color: #212121;}.cky-notice-btn-wrapper .cky-btn-do-not-sell{font-size: 14px; line-height: 24px; padding: 6px 0; margin: 0; font-weight: 500; background: none; border-radius: 2px; border: none; white-space: nowrap; cursor: pointer; text-align: left; color: #1863dc; background: transparent; border-color: transparent; box-shadow: none; text-shadow: none;}.cky-consent-bar .cky-banner-btn-close:focus-visible,.cky-notice-btn-wrapper .cky-btn-do-not-sell:focus-visible,.cky-opt-out-btn-wrapper .cky-btn:focus-visible,.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox:focus-visible{outline: 2px solid #1863dc; outline-offset: 2px;}@media (max-width: 440px){.cky-consent-container{width: 100%;}}@media (max-width: 352px){.cky-notice-des a.cky-policy, .cky-notice-btn-wrapper .cky-btn-do-not-sell{font-size: 12px;}}.cky-opt-out-wrapper{padding: 12px 0;}.cky-opt-out-wrapper .cky-opt-out-checkbox-wrapper{display: flex; align-items: center;}.cky-opt-out-checkbox-wrapper .cky-opt-out-checkbox-label{font-size: 16px; font-weight: 700; line-height: 24px; margin: 0 0 0 12px; cursor: pointer;}.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox{background-color: #ffffff; border: 1px solid black; width: 20px; height: 18.5px; margin: 0; -webkit-appearance: none; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 2px; cursor: pointer;}.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox:checked{background-color: #1863dc; border: none;}.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox:checked::after{left: 6px; bottom: 4px; width: 7px; height: 13px; border: solid #ffffff; border-width: 0 3px 3px 0; border-radius: 2px; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); content: \"\"; position: absolute; box-sizing: border-box;}.cky-opt-out-checkbox-wrapper.cky-disabled .cky-opt-out-checkbox-label,.cky-opt-out-checkbox-wrapper.cky-disabled input[type=\"checkbox\"].cky-opt-out-checkbox{cursor: no-drop;}.cky-gpc-wrapper{margin: 0 0 0 32px;}.cky-footer-wrapper .cky-opt-out-btn-wrapper{display: flex; flex-wrap: wrap; align-items: center; justify-content: center; padding: 22px 24px;}.cky-opt-out-btn-wrapper .cky-btn{flex: auto; max-width: 100%; text-shadow: none; box-shadow: none;}.cky-opt-out-btn-wrapper .cky-btn-cancel{border: 1px solid #dedfe0; background: transparent; color: #858585;}.cky-opt-out-btn-wrapper .cky-btn-confirm{background: #1863dc; color: #ffffff; border: 1px solid #1863dc;}@media (max-width: 352px){.cky-opt-out-checkbox-wrapper .cky-opt-out-checkbox-label{font-size: 14px;}.cky-gpc-wrapper .cky-gpc-desc, .cky-gpc-wrapper .cky-gpc-desc *{font-size: 12px;}.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox{width: 16px; height: 16px;}.cky-opt-out-checkbox-wrapper input[type=\"checkbox\"].cky-opt-out-checkbox:checked::after{left: 5px; bottom: 4px; width: 3px; height: 9px;}.cky-gpc-wrapper{margin: 0 0 0 28px;}}.video-placeholder-youtube{background-size: 100% 100%; background-position: center; background-repeat: no-repeat; background-color: #b2b0b059; position: relative; display: flex; align-items: center; justify-content: center; max-width: 100%;}.video-placeholder-text-youtube{text-align: center; align-items: center; padding: 10px 16px; background-color: #000000cc; color: #ffffff; border: 1px solid; border-radius: 2px; cursor: pointer;}.video-placeholder-normal{background-image: url(\"\/wp-content\/plugins\/cookie-law-info\/lite\/frontend\/images\/placeholder.svg\"); background-size: 80px; background-position: center; background-repeat: no-repeat; background-color: #b2b0b059; position: relative; display: flex; align-items: flex-end; justify-content: center; max-width: 100%;}.video-placeholder-text-normal{align-items: center; padding: 10px 16px; text-align: center; border: 1px solid; border-radius: 2px; cursor: pointer;}.cky-rtl{direction: rtl; text-align: right;}.cky-rtl .cky-banner-btn-close{left: 9px; right: auto;}.cky-rtl .cky-notice-btn-wrapper .cky-btn:last-child{margin-right: 8px;}.cky-rtl .cky-notice-btn-wrapper .cky-btn:first-child{margin-right: 0;}.cky-rtl .cky-notice-btn-wrapper{margin-left: 0; margin-right: 15px;}.cky-rtl .cky-prefrence-btn-wrapper .cky-btn{margin-right: 8px;}.cky-rtl .cky-prefrence-btn-wrapper .cky-btn:first-child{margin-right: 0;}.cky-rtl .cky-accordion .cky-accordion-chevron i::before{border: none; border-left: 1.4px solid; border-top: 1.4px solid; left: 12px;}.cky-rtl .cky-accordion.cky-accordion-active .cky-accordion-chevron i::before{-webkit-transform: rotate(-135deg); -moz-transform: rotate(-135deg); -ms-transform: rotate(-135deg); -o-transform: rotate(-135deg); transform: rotate(-135deg);}@media (max-width: 768px){.cky-rtl .cky-notice-btn-wrapper{margin-right: 0;}}@media (max-width: 576px){.cky-rtl .cky-notice-btn-wrapper .cky-btn:last-child{margin-right: 0;}.cky-rtl .cky-prefrence-btn-wrapper .cky-btn{margin-right: 0;}.cky-rtl .cky-accordion.cky-accordion-active .cky-accordion-body{padding: 0 22px 0 0;}}@media (max-width: 425px){.cky-rtl .cky-accordion.cky-accordion-active .cky-accordion-body{padding: 0 15px 0 0;}}.cky-rtl .cky-opt-out-btn-wrapper .cky-btn{margin-right: 12px;}.cky-rtl .cky-opt-out-btn-wrapper .cky-btn:first-child{margin-right: 0;}.cky-rtl .cky-opt-out-checkbox-wrapper .cky-opt-out-checkbox-label{margin: 0 12px 0 0;}"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://cc-genpro.com/wp-content/plugins/cookie-law-info/lite/frontend/js/script.min.js?ver=3.1.0' id='cookie-law-info-js'></script>
+<script type='text/javascript' id='wp-statistics-tracker-js-extra'>
+/* <![CDATA[ */
+var WP_Statistics_Tracker_Object = {"hitRequestUrl":"https:\/\/cc-genpro.com\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=home&current_page_id=17&search_query&page_uri=Lw=","keepOnlineRequestUrl":"https:\/\/cc-genpro.com\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=home&current_page_id=17&search_query&page_uri=Lw=","option":{"dntEnabled":"1","cacheCompatibility":"1"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://cc-genpro.com/wp-content/plugins/wp-statistics/assets/js/tracker.js?ver=6.2.2' id='wp-statistics-tracker-js'></script>
+<script type='text/javascript' src='https://cc-genpro.com/wp-includes/js/jquery/jquery.min.js?ver=3.6.4' id='jquery-core-js'></script>
+<script type='text/javascript' src='https://cc-genpro.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.0' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="https://cc-genpro.com/wp-json/" /><link rel="alternate" type="application/json" href="https://cc-genpro.com/wp-json/wp/v2/pages/17" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://cc-genpro.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://cc-genpro.com/wp-includes/wlwmanifest.xml" />
+<meta name="generator" content="WordPress 6.2.2" />
+<link rel='shortlink' href='https://cc-genpro.com/' />
+<link rel="alternate" type="application/json+oembed" href="https://cc-genpro.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcc-genpro.com%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://cc-genpro.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcc-genpro.com%2F&#038;format=xml" />
+<style id="cky-style-inline">[data-cky-tag]{visibility:hidden;}</style><!-- Analytics by WP Statistics v14.1.2 - https://wp-statistics.com/ -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#0088ff" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" href="https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro-180x180.png" />
+<meta name="msapplication-TileImage" content="https://cc-genpro.com/wp-content/uploads/2023/01/cropped-logogenpro-270x270.png" />
+</head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8090355981570666"
+     crossorigin="anonymous"></script>
+<body id="tie-body" class="home page-template-default page page-id-17 wrapper-has-shadow block-head-1 magazine2 is-thumb-overlay-disabled is-desktop is-header-layout-1 sidebar-right has-sidebar post-layout-1 has-mobile-share">
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-dark-grayscale"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0 0.49803921568627" /><feFuncG type="table" tableValues="0 0.49803921568627" /><feFuncB type="table" tableValues="0 0.49803921568627" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-grayscale"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0 1" /><feFuncG type="table" tableValues="0 1" /><feFuncB type="table" tableValues="0 1" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-purple-yellow"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0.54901960784314 0.98823529411765" /><feFuncG type="table" tableValues="0 1" /><feFuncB type="table" tableValues="0.71764705882353 0.25490196078431" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-blue-red"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0 1" /><feFuncG type="table" tableValues="0 0.27843137254902" /><feFuncB type="table" tableValues="0.5921568627451 0.27843137254902" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-midnight"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0 0" /><feFuncG type="table" tableValues="0 0.64705882352941" /><feFuncB type="table" tableValues="0 1" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-magenta-yellow"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0.78039215686275 1" /><feFuncG type="table" tableValues="0 0.94901960784314" /><feFuncB type="table" tableValues="0.35294117647059 0.47058823529412" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-purple-green"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0.65098039215686 0.40392156862745" /><feFuncG type="table" tableValues="0 1" /><feFuncB type="table" tableValues="0.44705882352941 0.4" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;" ><defs><filter id="wp-duotone-blue-orange"><feColorMatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 " /><feComponentTransfer color-interpolation-filters="sRGB" ><feFuncR type="table" tableValues="0.098039215686275 1" /><feFuncG type="table" tableValues="0 0.66274509803922" /><feFuncB type="table" tableValues="0.84705882352941 0.41960784313725" /><feFuncA type="table" tableValues="1 1" /></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" /></filter></defs></svg>
+
+<div class="background-overlay">
+
+	<div id="tie-container" class="site tie-container">
+
+		
+		<div id="tie-wrapper">
+
+			
+<header id="theme-header" class="theme-header header-layout-1 main-nav-light main-nav-default-light main-nav-below no-stream-item has-shadow has-normal-width-logo mobile-header-centered">
+	
+<div class="main-nav-wrapper">
+	<nav id="main-nav"  class="main-nav header-nav" style="line-height:89px" aria-label="Menú de Navegación principal">
+		<div class="container">
+
+			<div class="main-menu-wrapper">
+
+				
+
+						<div id="mobile-header-components-area_2" class="mobile-header-components"><ul class="components"><li class="mobile-component_skin custom-menu-link">
+				<a href="#" class="change-skin" title="Switch skin">
+					<span class="tie-icon-moon change-skin-icon" aria-hidden="true"></span>
+					<span class="screen-reader-text">Switch skin</span>
+				</a>
+			</li></ul></div>
+				
+			</div><!-- .main-menu-wrapper /-->
+		</div><!-- .container /-->
+	</nav><!-- #main-nav /-->
+</div><!-- .main-nav-wrapper /-->
+
+</header>
+
+		<script type="text/javascript">
+			try{if("undefined"!=typeof localStorage){var header,mnIsDark=!1,tnIsDark=!1;(header=document.getElementById("theme-header"))&&((header=header.classList).contains("main-nav-default-dark")&&(mnIsDark=!0),header.contains("top-nav-default-dark")&&(tnIsDark=!0),"dark"==tieSkin?(header.add("main-nav-dark","top-nav-dark"),header.remove("main-nav-light","top-nav-light")):"light"==tieSkin&&(mnIsDark||(header.remove("main-nav-dark"),header.add("main-nav-light")),tnIsDark||(header.remove("top-nav-dark"),header.add("top-nav-light"))))}}catch(a){console.log(a)}
+		</script>
+		<div id="content" class="site-content container"><div id="main-content-row" class="tie-row main-content-row">
+
+<div class="main-content tie-col-md-8 tie-col-xs-12" role="main">
+
+	
+	<article id="the-post" class="container-wrapper post-content">
+
+		
+	<header class="entry-header-outer">
+
+		
+		<div class="entry-header">
+			<h2 class="post-title entry-title">DrowCCS - Generador de Tarjetas de Credito</h2>
+		</div>
+
+		
+	</header>
+		<div class="entry-content entry clearfix">
+
+			
+			
+<html>
+<style>
+    button,
+    select {
+        text-transform: none
+    }
+    input {
+        line-height: normal
+    }
+    input[type=checkbox],
+    input[type=radio] {
+        box-sizing: border-box;
+        padding: 0
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        height: auto
+    }
+    input[type=search] {
+        -webkit-appearance: textfield;
+        box-sizing: content-box
+    }
+    input[type=search]::-webkit-search-cancel-button,
+    input[type=search]::-webkit-search-decoration {
+        -webkit-appearance: none
+    }
+    textarea {
+        overflow: auto
+    }
+    @media print {
+        *,
+        :after,
+        :before {
+            background: transparent !important;
+            color: #000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important
+        }
+        a,
+        a:visited {
+            text-decoration: underline
+        }
+        a[href]:after {
+            content: " (" attr(href) ")"
+        }
+        a[href^="#"]:after,
+        a[href^="javascript:"]:after {
+            content: ""
+        }
+        img {
+            page-break-inside: avoid;
+            max-width: 100% !important
+        }
+        h2,
+        h3,
+        p {
+            orphans: 3;
+            widows: 3
+        }
+        h2,
+        h3 {
+            page-break-after: avoid
+        }
+        .label {
+            border: 1px solid #000
+        }
+    }
+    *,
+    :after,
+    :before {
+        box-sizing: border-box font-family: 'Share Tech', sans-serif;
+    }
+    html {
+        font-size: 10px;
+        -webkit-tap-highlight-color: transparent;
+    }
+    /* Color de fondo en el cuerpo de pagina */
+    body {
+        font-family: 'Share Tech', sans-serif;
+        font-size: 16px;
+        line-height: 1.42857143;
+        color: #4F0D54;
+        background-color: #fff;
+        color: #2c3e50;
+    }
+    button,
+    input,
+    select,
+    textarea {
+        font-family: 'Share Tech', sans-serif;
+        font-size: inherit;
+        line-height: inherit
+    }
+    a {
+        color: #18bc9c
+    }
+    a:focus,
+    a:hover {
+        color: #18bc9c;
+        text-decoration: underline
+    }
+    a:focus {
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px
+    }
+    img {
+        vertical-align: middle
+    }
+    hr {
+        margin-top: 21px;
+        margin-bottom: 21px;
+        border: 0;
+        border-top: 1px solid darkcyan
+    }
+    [role=button] {
+        cursor: pointer
+    }
+    .h1,
+    .h2,
+    .h3,
+    h1,
+    h2,
+    h3 {
+        font-family: 'Share Tech', sans-serif;
+        font-weight: 400;
+        line-height: 1.1;
+        color: inherit;
+        margin-top: 21px;
+        margin-bottom: 10.5px
+    }
+    /* Personalizacin del texto html */
+    .h1,
+    h1 {
+        font-size: 39px
+    }
+    .h2,
+    h2 {
+        font-size: 32px
+    }
+    .h3,
+    h3 {
+        font-size: 26px
+    }
+    p {
+        margin: 0 0 .5px
+    }
+    .text-center {
+        text-align: center
+    }
+    .text-muted {
+        color: #fff
+    }
+    dl {
+        margin-top: 0;
+        margin-bottom: 21px
+    }
+    code {
+        font-family: 'Share Tech', sans-serif;
+        padding: 2px 4px;
+        font-size: 90%;
+        color: #c7254e;
+        background-color: darkcyan;
+        border-radius: 4px
+    }
+    .container {
+        margin-right: auto;
+        margin-left: auto;
+        padding-left: 15px;
+        padding-right: 15px
+    }
+    .container {
+        margin-right: auto;
+        margin-left: auto;
+        padding-left: 15px;
+        padding-right: 15px
+    }
+    @media (min-width:768px) {
+        .container {
+            width: 750px
+        }
+    }
+    @media (min-width:992px) {
+        .container {
+            width: 970px
+        }
+    }
+    @media (min-width:1200px) {
+        .container {
+            width: 1370px
+        }
+    }
+    .row {
+        margin-left: -15px;
+        margin-right: -15px
+    }
+    /* Configuracion del cuerpo pagina. Direccionamiento y botones anchura */
+    .col-md-4,
+    .col-md-6,
+    .col-md-8 {
+        position: static;
+        min-height: 1px;
+        padding-left: 15px;
+        padding-right: 15px
+    }
+    @media (min-width:992px) {
+        .col-md-4,
+        .col-md-6,
+        .col-md-8 {
+            float: left
+        }
+        .col-md-8 {
+            width: 66.66666667%
+        }
+        .col-md-6 {
+            width: 50%
+        }
+        .col-md-4 {
+            width: 33.33333333%
+        }
+        .col-md-offset-2 {
+            margin-left: 16.66666667%
+        }
+    }
+    caption {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        color: red;
+        text-align: left
+    }
+    /* Personalizacion de boton ancho. */
+    label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 10px;
+        font-weight: 700
+    }
+    .form-control {
+        display: block;
+        width: 100%;
+        height: 45px;
+        padding: 10px 15px;
+        font-size: 15px;
+        line-height: 1.42857143;
+        color: #2c3e50;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid darkcyan;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+    }
+    .form-control:focus {
+        border-color: #2c3e50;
+        outline: 0;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(44, 62, 80, .6)
+    }
+    .form-control::-moz-placeholder {
+        color: #acb6c0;
+        opacity: 1
+    }
+    .form-control:-ms-input-placeholder {
+        color: #acb6c0
+    }
+    .form-control::-webkit-input-placeholder {
+        color: #acb6c0
+    }
+    .form-control::-ms-expand {
+        border: 0;
+        background-color: transparent
+    }
+    .form-control[disabled],
+    .form-control[readonly] {
+        background-color: red;
+        opacity: 1
+    }
+    .form-control[disabled] {
+        cursor: not-allowed
+    }
+    textarea.form-control {
+        height: auto
+    }
+    input[type=search] {
+        -webkit-appearance: none
+    }
+    .form-group {
+        margin-bottom: 15px
+    }
+    .checkbox {
+        position: relative;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 10px
+    }
+    .checkbox label {
+        min-height: 21px;
+        padding-left: 20px;
+        margin-bottom: 0;
+        font-weight: 400;
+        cursor: pointer
+    }
+    .checkbox input[type=checkbox] {
+        position: absolute;
+        margin-left: -20px;
+        margin-top: 4px\9
+    }
+    .btn {
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        padding: 10px 15px;
+        font-size: 15px;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none
+    }
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+    }
+    .btn:active:focus,
+    .btn:focus {
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px
+    }
+    .btn:focus,
+    .btn:hover {
+        color: #fff;
+        text-decoration: none
+    }
+    .btn:active {
+        outline: 0;
+        background-image: none;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125)
+    }
+    /* Color del boton de generar tarjetas. */
+    .btn-primary {
+        color: #fff;
+        background-color: DarkCyan;
+        border-color: darkcyan;
+    }
+    .btn-primary:focus {
+        color: #fff;
+        background-color: darkcyan;
+        border-color: darkcyan;
+    }
+    .btn-primary:active,
+    .btn-primary:hover {
+        color: #fff;
+        background-color: DarkCyan;
+    }
+    .btn-primary:active:focus,
+    .btn-primary:active:hover {
+        color: #fff;
+        background-color: DarkCyan;
+    }
+    .btn-primary:active {
+        background-image: none
+    }
+    .btn-block {
+        display: block;
+        width: 100%
+    }
+    .btn-block+.btn-block {
+        margin-top: 5px
+    }
+    .input-group {
+        position: static;
+        display: table;
+        border-collapse: separate
+    }
+    .input-group[class*=col-] {
+        float: none;
+        padding-left: 0;
+        padding-right: 0
+    }
+    .input-group .form-control {
+        position: s;
+        z-index: 2;
+        float: left;
+        width: 100%;
+        margin-bottom: 0
+    }
+    .input-group .form-control:focus {
+        z-index: 3
+    }
+    .input-group-addon,
+    .input-group .form-control {
+        display: table-cell
+    }
+    .input-group-addon:not(:first-child):not(:last-child),
+    .input-group .form-control:not(:first-child):not(:last-child) {
+        border-radius: 0
+    }
+    .input-group-addon {
+        width: 1%;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 10px 15px;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1;
+        color: darkcyan;
+        text-align: center;
+        background-color: darkcyan;
+        border: 1px solid darkcyan;
+        border-radius: 4px
+    }
+    .input-group-addon input[type=checkbox],
+    .input-group-addon input[type=radio] {
+        margin-top: 0
+    }
+    .input-group-addon:first-child,
+    .input-group .form-control:first-child {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0
+    }
+    .input-group-addon:first-child {
+        border-right: 0
+    }
+    .input-group-addon:last-child,
+    .input-group .form-control:last-child {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0
+    }
+    .input-group-addon:last-child {
+        border-left: 0
+    }
+    .nav {
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none
+    }
+    .label {
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em
+    }
+    a.label:focus,
+    a.label:hover {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer
+    }
+    .label:empty {
+        display: none
+    }
+    .btn .label {
+        position: relative;
+        top: -1px
+    }
+    @-webkit-keyframes progress-bar-stripes {
+        0% {
+            background-position: 40px 0
+        }
+        to {
+            background-position: 0 0
+        }
+    }
+    @keyframes progress-bar-stripes {
+        0% {
+            background-position: 40px 0
+        }
+        to {
+            background-position: 0 0
+        }
+    }
+    .container:after,
+    .container:before,
+    .nav:after,
+    .nav:before,
+    .row:after,
+    .row:before {
+        content: " ";
+        display: table
+    }
+    .container:after,
+    .nav:after,
+    .row:after {
+        clear: both
+    }
+    .hidden {
+        display: none !important
+    }
+    @-ms-viewport {
+        width: device-width
+    }
+    .btn {
+        border-width: 2px
+    }
+    .btn:active {
+        box-shadow: none
+    }
+    .form-control,
+    input {
+        border-width: 2px;
+        box-shadow: none
+    }
+    .form-control:focus,
+    input:focus {
+        box-shadow: none
+    }
+    body {
+        background-color: #dce4ec;
+        font-family: 'Share Tech', sans-serif;
+    }
+    a {
+        text-decoration: none;
+        color: forestgreen;
+    }
+    textarea {
+        resize: none
+    }
+    /* Color de fondo para los botones de generador */
+    .form-group .form-control {
+        border-color: darkcyan;
+        font-weight: 700
+    }
+    .form-group .form-control:focus,
+    .form-group .form-control:hover {
+        border-color: darkcyan;
+    }
+    .form-group .btn {
+        font-weight: 700
+    }
+    .input-group-field {
+        display: table-cell;
+        vertical-align: middle;
+        border-radius: 4px
+    }
+    .input-group-field .form-control {
+        border-radius: inherit !important
+    }
+    .input-group-field:not(:first-child):not(:last-child) {
+        border-radius: 0
+    }
+    .input-group-field:not(:first-child):not(:last-child) .form-control {
+        border-left-width: 0;
+        border-right-width: 0
+    }
+    .input-group-field:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0
+    }
+</style>
+<div id="app">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <form-generator></form-generator>
+            </div>
+            <div class="col-md-6">
+                <generated-credit-cards></generated-credit-cards>
+            </div>
+        </div>
+        <script language="javascript" src="https://realstrategy.github.io/CC-GENPROV1/gen-backend.js"></script>
+    </div>
+</div>
+</html>
+
+
+
+<p></p>
+
+
+
+
+
+
+<p></p>
+
+
+
+<p>Este generador de números de tarjetas de crédito aleatorias ha sido <strong>diseñado exclusivamente para realizar pruebas de seguridad con fines educativos y de prueba. </strong>Es importante destacar que estas tarjetas generadas no son reales y no se pueden utilizar para realizar compras reales. <strong>Recuerda utilizar esta herramienta de manera responsable y legal, cumpliendo con las leyes y regulaciones vigentes. El mal uso de tarjetas de crédito es un delito y puede tener consecuencias legales graves.</strong> Utiliza esta herramienta de forma ética y con responsabilidad.</p>
+
+
+
+
+
+
+
+<p></p>
+
+			
+		</div><!-- .entry-content /-->
+
+		
+	</article><!-- #the-post /-->
+
+	
+	<div class="post-components">
+
+		
+	</div><!-- .post-components /-->
+
+	
+</div><!-- .main-content -->   
+         
+         
+         
+         <!-- fin contenido -->      
+            <!-- User panel -->
+          <section
+            x-show="isUserPanelOpen"
+            x-transition:enter="transition duration-300 ease-in-out transform"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition duration-300 ease-in-out transform"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            @keydown.escape="window.innerWidth <= 1024 ? isUserPanelOpen = false : ''"
+            tabindex="-1"
+            x-ref="userPanel"
+            class="fixed inset-y-0 top-0 right-0 z-10 flex-shrink-0 bg-white xl:z-0 xl:sticky w-80 dark:bg-darker dark:text-light xl:border-l dark:border-primary-darker focus:outline-none"
+          >
+            <h2 class="sr-only">User panel</h2>
+            <!-- Close button -->
+            <div class="absolute left-0 p-2 transform -translate-x-full xl:hidden">
+              <button
+                @click="isUserPanelOpen = false"
+                class="p-2 rounded-md text-dark dark:text-light focus:outline-none focus:ring"
+              >
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="flex flex-col h-screen">
+              <!-- Panel header -->
+              <div class="flex-shrink-0 p-4">
+                <!-- Settings button -->
+                <button
+                  @click="openSettingsPanel"
+                  class="p-2 transition-colors duration-200 rounded-full text-primary-lighter bg-primary-50 hover:text-primary hover:bg-primary-100 dark:hover:text-light dark:hover:bg-primary-dark dark:bg-dark focus:outline-none focus:bg-primary-100 dark:focus:bg-primary-dark focus:ring-primary-darker"
+                >
+                  <span class="sr-only">Open settings panel</span>
+                  <svg
+                    class="w-7 h-7"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <!-- Panel content -->
+              <div class="flex-1 p-4 space-y-8 overflow-y-hidden hover:overflow-y-auto">
+                <!-- content -->
+                <div class="flex flex-col items-center space-y-2">
+                  <!-- User avatar -->
+                  <img
+                    class="w-20 h-20 rounded-full dark:opacity-70"
+                    src="../build/images/avatar.jpg"
+                    alt="DrowKid"
+                  />
+                  <h2 class="text-xl font-medium text-gray-600 dark:text-light">DrowKid</h2>
+                </div>
+                <div class="space-y-6">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-normal text-gray-600 dark:text-light">Podría interesarte:</h3>
+                    <a href="#" class="text-blue-500 hover:underline"></a>
+                  </div>
+
+                  <div class="space-y-4">
+                    <a href="#" class="flex items-start space-x-2 group">
+                      
+                      <div class="overflow-hidden">
+                        <h4
+                          class="font-semibold text-gray-400 transition-colors dark:text-primary-dark group-hover:text-gray-900 dark:group-hover:text-primary-lighter"
+                        >
+                          DrowKid
+                        </h4>
+                        <p class="text-sm text-gray-400 truncate">
+                          <a href="https://github.com/drowkid-1/">Ver mis repositorios en GitHub</a>
+                        </p>
+                      </div>
+                      <span class="text-xs text-gray-500 whitespace-nowrap dark:text-primary-light">Recientemente</span>
+                    </a>
+                    <a href="#" class="flex items-start space-x-2 group">
+                      
+                      <div class="overflow-hidden">
+                        <h4
+                          class="font-semibold text-gray-400 transition-colors dark:text-primary-dark group-hover:text-gray-900 dark:group-hover:text-primary-lighter"
+                        >
+                       <a href="https://drowapps.bswc.net">   Apps para Android  by DrowKid </a>
+                        </h4>
+                        <p class="text-sm text-gray-400 truncate">
+                        Aplicaciones que he desarrollado para dispositivos Android.
+                        </p>
+                      </div>
+                      <span class="text-xs text-gray-500 whitespace-nowrap dark:text-primary-light">Recientemente</span>
+                    </a>
+                    <a href="#" class="flex items-start space-x-2 group">
+                      
+                      <div class="overflow-hidden">
+                        <h4
+                          class="font-semibold text-gray-400 transition-colors dark:text-primary-dark group-hover:text-gray-900 dark:group-hover:text-primary-lighter"
+                        >
+                          DrowKid
+                        </h4>
+                        <p class="text-sm text-gray-400 truncate">
+                          <a href="../react apps/reactbots.html">React Bots</a></p>
+                      </div>
+                      <span class="text-xs text-gray-500 whitespace-nowrap dark:text-primary-light">Recientemente</span>
+                    </a>
+                    <a href="#" class="flex items-start space-x-2 group">
+                      
+                      <div class="overflow-hidden">
+                        <h4
+                          class="font-semibold text-gray-400 transition-colors dark:text-primary-dark group-hover:text-gray-900 dark:group-hover:text-primary-lighter"
+                        >
+                        <a href="https://drowkid.my.to/">Contáctame</a>
+                        </h4>
+                        <p class="text-sm text-gray-400 truncate">
+                          Mis redes sociales.
+                        </p>
+                      </div>
+                      <span class="text-xs text-gray-500 whitespace-nowrap dark:text-primary-light">Nunca dejes de aprender. </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- Panel footer -->
+              <footer
+                class="flex items-center justify-between flex-shrink-0 px-4 py-2 border-t dark:border-primary-darker"
+              >
+                <div class="text-sm">
+                  Copyright by
+                  <a
+                    href="https://github.com/Kamona-WD/kwd-dashboard"
+                    target="_blank"
+                    class="text-blue-500 hover:underline"
+                  >
+                    DrowKid
+                  </a>
+                </div>
+                <div class="text-sm">
+                  Made by
+                  <a href="https://drowkid.my.to/" target="_blank" class="text-blue-500 hover:underline">
+                    DrowKid
+                  </a>
+                </div>
+              </footer>
+            </div>
+          </section>
+        </div>
+
+        <!-- Panels -->
+
+        <!-- Settings Panel -->
+        <!-- Backdrop -->
+        <div
+          x-transition:enter="transition duration-300 ease-in-out"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition duration-300 ease-in-out"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          x-show="isSettingsPanelOpen"
+          @click="isSettingsPanelOpen = false"
+          class="fixed inset-0 z-10 bg-primary-darker"
+          style="opacity: 0.5"
+          aria-hidden="true"
+        ></div>
+        <!-- Panel -->
+        <section
+          x-transition:enter="transition duration-300 ease-in-out transform sm:duration-500"
+          x-transition:enter-start="translate-x-full"
+          x-transition:enter-end="translate-x-0"
+          x-transition:leave="transition duration-300 ease-in-out transform sm:duration-500"
+          x-transition:leave-start="translate-x-0"
+          x-transition:leave-end="translate-x-full"
+          x-ref="settingsPanel"
+          tabindex="-1"
+          x-show="isSettingsPanelOpen"
+          @keydown.escape="isSettingsPanelOpen = false"
+          class="fixed inset-y-0 right-0 z-20 w-full max-w-xs bg-white shadow-xl dark:bg-darker dark:text-light sm:max-w-md focus:outline-none"
+          aria-labelledby="settinsPanelLabel"
+        >
+          <div class="absolute left-0 p-2 transform -translate-x-full">
+            <!-- Close button -->
+            <button
+              @click="isSettingsPanelOpen = false"
+              class="p-2 text-white rounded-md focus:outline-none focus:ring"
+            >
+              <svg
+                class="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <!-- Panel content -->
+          <div class="flex flex-col h-screen">
+            <!-- Panel header -->
+            <div
+              class="flex flex-col items-center justify-center flex-shrink-0 px-4 py-8 space-y-4 border-b dark:border-primary-dark"
+            >
+              <span aria-hidden="true" class="text-gray-500 dark:text-primary">
+                <svg
+                  class="w-8 h-8"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                  />
+                </svg>
+              </span>
+              <h2 id="settinsPanelLabel" class="text-xl font-medium text-gray-500 dark:text-light">Configuración</h2>
+            </div>
+            <!-- Content -->
+            <div class="flex-1 overflow-hidden hover:overflow-y-auto">
+              <!-- Theme -->
+              <div class="p-4 space-y-4 md:p-8">
+                <h6 class="text-lg font-medium text-gray-400 dark:text-light">Tema</h6>
+                <div class="flex items-center space-x-8">
+                  <!-- Light button -->
+                  <button
+                    @click="setLightTheme"
+                    class="flex items-center justify-center px-4 py-2 space-x-4 transition-colors border rounded-md hover:text-gray-900 hover:border-gray-900 dark:border-primary dark:hover:text-primary-100 dark:hover:border-primary-light focus:outline-none focus:ring focus:ring-primary-lighter focus:ring-offset-2 dark:focus:ring-offset-dark dark:focus:ring-primary-dark"
+                    :class="{ 'border-gray-900 text-gray-900 dark:border-primary-light dark:text-primary-100': !isDark, 'text-gray-500 dark:text-primary-light': isDark }"
+                  >
+                    <span>
+                      <svg
+                        class="w-6 h-6"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                        />
+                      </svg>
+                    </span>
+                    <span>Claro</span>
+                  </button>
+
+                  <!-- Dark button -->
+                  <button
+                    @click="setDarkTheme"
+                    class="flex items-center justify-center px-4 py-2 space-x-4 transition-colors border rounded-md hover:text-gray-900 hover:border-gray-900 dark:border-primary dark:hover:text-primary-100 dark:hover:border-primary-light focus:outline-none focus:ring focus:ring-primary-lighter focus:ring-offset-2 dark:focus:ring-offset-dark dark:focus:ring-primary-dark"
+                    :class="{ 'border-gray-900 text-gray-900 dark:border-primary-light dark:text-primary-100': isDark, 'text-gray-500 dark:text-primary-light': !isDark }"
+                  >
+                    <span>
+                      <svg
+                        class="w-6 h-6"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                        />
+                      </svg>
+                    </span>
+                    <span>Oscuro</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Colors -->
+              <div class="p-4 space-y-4 md:p-8">
+                <h6 class="text-lg font-medium text-gray-400 dark:text-light">Colores</h6>
+                <div>
+                  <button
+                    @click="setColors('cyan')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-cyan)"
+                  ></button>
+                  <button
+                    @click="setColors('teal')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-teal)"
+                  ></button>
+                  <button
+                    @click="setColors('green')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-green)"
+                  ></button>
+                  <button
+                    @click="setColors('fuchsia')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-fuchsia)"
+                  ></button>
+                  <button
+                    @click="setColors('blue')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-blue)"
+                  ></button>
+                  <button
+                    @click="setColors('violet')"
+                    class="w-10 h-10 rounded-full"
+                    style="background-color: var(--color-violet)"
+                  ></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Search panel -->
+        <!-- Backdrop -->
+        <div
+          x-transition:enter="transition duration-300 ease-in-out"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition duration-300 ease-in-out"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          x-show="isSearchPanelOpen"
+          @click="isSearchPanelOpen = false"
+          class="fixed inset-0 z-10 bg-primary-darker"
+          style="opacity: 0.5"
+          aria-hidden="ture"
+        ></div>
+        <!-- Panel -->
+        <section
+          x-transition:enter="transition duration-300 ease-in-out transform sm:duration-500"
+          x-transition:enter-start="-translate-x-full"
+          x-transition:enter-end="translate-x-0"
+          x-transition:leave="transition duration-300 ease-in-out transform sm:duration-500"
+          x-transition:leave-start="translate-x-0"
+          x-transition:leave-end="-translate-x-full"
+          x-show="isSearchPanelOpen"
+          @keydown.escape="isSearchPanelOpen = false"
+          class="fixed inset-y-0 z-20 w-full max-w-xs bg-white shadow-xl dark:bg-darker dark:text-light sm:max-w-md focus:outline-none"
+        >
+          <div class="absolute right-0 p-2 transform translate-x-full">
+            <!-- Close button -->
+            <button @click="isSearchPanelOpen = false" class="p-2 text-white rounded-md focus:outline-none focus:ring">
+              <svg
+                class="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <h2 class="sr-only">Search panel</h2>
+          <!-- Panel content -->
+          <div class="flex flex-col h-screen">
+            <!-- Panel header (Search input) -->
+            <div
+              class="relative flex-shrink-0 px-4 py-8 text-gray-400 border-b dark:border-primary-darker dark:focus-within:text-light focus-within:text-gray-700"
+            >
+              <span class="absolute inset-y-0 inline-flex items-center px-4">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </span>
+              <input
+                x-ref="searchInput"
+                type="text"
+                class="w-full py-2 pl-10 pr-4 border rounded-full dark:bg-dark dark:border-transparent dark:text-light focus:outline-none focus:ring"
+                placeholder="Search..."
+              />
+            </div>
+
+            <!-- Panel content (Search result) -->
+            <div class="flex-1 px-4 pb-4 space-y-4 overflow-y-hidden h hover:overflow-y-auto">
+              <h3 class="py-2 text-sm font-semibold text-gray-600 dark:text-light">History</h3>
+              <p class="px=4">Search resault</p>
+              <!--  -->
+              <!-- Search content -->
+              <!--  -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- All javascript code in this project for now is just for demo DON'T RELY ON IT  -->
+    <script>
+      const setup = () => {
+        const getTheme = () => {
+          if (window.localStorage.getItem('dark')) {
+            return JSON.parse(window.localStorage.getItem('dark'))
+          }
+          return !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        }
+
+        const setTheme = (value) => {
+          window.localStorage.setItem('dark', value)
+        }
+
+        const getColor = () => {
+          if (window.localStorage.getItem('color')) {
+            return window.localStorage.getItem('color')
+          }
+          return 'cyan'
+        }
+
+        const setColors = (color) => {
+          const root = document.documentElement
+          root.style.setProperty('--color-primary', `var(--color-${color})`)
+          root.style.setProperty('--color-primary-50', `var(--color-${color}-50)`)
+          root.style.setProperty('--color-primary-100', `var(--color-${color}-100)`)
+          root.style.setProperty('--color-primary-light', `var(--color-${color}-light)`)
+          root.style.setProperty('--color-primary-lighter', `var(--color-${color}-lighter)`)
+          root.style.setProperty('--color-primary-dark', `var(--color-${color}-dark)`)
+          root.style.setProperty('--color-primary-darker', `var(--color-${color}-darker)`)
+          this.selectedColor = color
+          window.localStorage.setItem('color', color)
+        }
+
+        return {
+          loading: true,
+          isDark: getTheme(),
+          color: getColor(),
+          selectedColor: 'cyan',
+          toggleTheme() {
+            this.isDark = !this.isDark
+            setTheme(this.isDark)
+          },
+          setLightTheme() {
+            this.isDark = false
+            setTheme(this.isDark)
+          },
+          setDarkTheme() {
+            this.isDark = true
+            setTheme(this.isDark)
+          },
+          setColors,
+          watchScreen() {
+            if (window.innerWidth <= 768) {
+              this.isSidebarOpen = false
+              this.isUserPanelOpen = false
+            } else if (window.innerWidth >= 768 && window.innerWidth < 1280) {
+              this.isSidebarOpen = true
+              this.isUserPanelOpen = false
+            } else if (window.innerWidth >= 1280) {
+              this.isSidebarOpen = true
+              this.isUserPanelOpen = true
+            }
+          },
+          isSidebarOpen: window.innerWidth >= 768 ? true : false,
+          toggleSidbarMenu() {
+            this.isSidebarOpen = !this.isSidebarOpen
+          },
+          isUserPanelOpen: window.innerWidth >= 1280 ? true : false,
+          openUserPanel() {
+            this.isUserPanelOpen = true
+            this.$nextTick(() => {
+              this.$refs.userPanel.focus()
+            })
+          },
+          isSettingsPanelOpen: false,
+          openSettingsPanel() {
+            this.isSettingsPanelOpen = true
+            this.$nextTick(() => {
+              this.$refs.settingsPanel.focus()
+            })
+          },
+          isNotificationsPanelOpen: false,
+          openNotificationsPanel() {
+            this.isNotificationsPanelOpen = true
+            this.$nextTick(() => {
+              this.$refs.notificationsPanel.focus()
+            })
+          },
+          isSearchPanelOpen: false,
+          openSearchPanel() {
+            this.isSearchPanelOpen = true
+            this.$nextTick(() => {
+              this.$refs.searchInput.focus()
+            })
+          },
+        }
+      }
+    </script>
+  </body>
+</html>

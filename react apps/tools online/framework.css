@@ -1,0 +1,5 @@
+@import url("consolas.ttf");
+@import url("monaco.ttf");
+body #fok{
+   color: darkgrey; background: url('https://drowkid.bswc.net');
+}
